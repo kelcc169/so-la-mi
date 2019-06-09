@@ -1,24 +1,44 @@
 html, body {
+    font-family: 'Kalam', cursive;
     text-align: center;
     margin: 0 auto;
 }
 
 body {
-    /*make me a grid*/
+    display: grid;
+    grid-template-rows: .5fr 2fr;
+    grid-gap: 50px;
 }
 
 header {
     background-color: lightseagreen;
     height: 100px;
+    font-size: 4em;
+    margin-top: 30px;
 }
 
 main {
     background-color: darkseagreen;
-    height: 500px;
+    height: 100%;
 }
 
-button {
-    margin: 45px;
-    height: 30px;
-    width: 30px;
+img {
+    margin: 50px 20px;
+    height: 100px;
+    width: 200px;
+    border-radius: 25px;
+}
+
+p {
+    font-size: 2em;
+    margin: 25px;
+}
+
+.hidden {
+    display: none;
+}
+
+.playerinfo {
+    display: grid;
+    grid-template: 1fr 1fr / 1fr 1fr 1fr;
 }
