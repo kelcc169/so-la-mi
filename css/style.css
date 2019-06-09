@@ -1,0 +1,24 @@
+html, body {
+    text-align: center;
+    margin: 0 auto;
+}
+
+body {
+    /*make me a grid*/
+}
+
+header {
+    background-color: lightseagreen;
+    height: 100px;
+}
+
+main {
+    background-color: darkseagreen;
+    height: 500px;
+}
+
+button {
+    margin: 45px;
+    height: 30px;
+    width: 30px;
+}
