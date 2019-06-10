@@ -22,7 +22,7 @@ main {
 }
 
 img {
-    margin: 50px 20px;
+    /* margin: 50px 20px; */
     height: 100px;
     width: 200px;
     border-radius: 25px;
@@ -40,4 +40,20 @@ p {
 .playerinfo {
     display: grid;
     grid-template: 1fr 1fr / 1fr 1fr 1fr;
+}
+
+#clickbox {
+    height: 200px;
+    border: 1px solid black;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    align-items: center;
+}
+
+img:hover {
+    height: 90px;
+    width: 190px;
+    border: 5px solid aqua;
+    box-shadow: 5px 10px
 }

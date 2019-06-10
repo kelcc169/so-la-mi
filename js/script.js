@@ -12,9 +12,13 @@ var oneScoreBox;
 var twoScoreBox;
 var clickbox;
 var startBtn;
+var miAudio;
+var soAudio;
+var laAudio;
+var buzzer;
+var ding;
 
 //reset button
-//sounds to play
 
 //Event Listeners
 document.addEventListener('DOMContentLoaded', function (e) {
@@ -23,38 +27,28 @@ document.addEventListener('DOMContentLoaded', function (e) {
     twoScoreBox = document.getElementById('player2');
     startBtn = document.getElementById('start');
     currentEl = document.getElementById('currentPl');
+    miAudio = document.getElementById('mi-audio');
+    soAudio = document.getElementById('so-audio');
+    laAudio = document.getElementById('la-audio');
+    buzzer = document.getElementById('buzzer');
+    ding = document.getElementById('ding');
+    click = document.getElementById('click');
     
     var testAudio = document.getElementById('audio');
 
-    testAudio.addEventListener('click', function (e) {
-        var sound = document.getElementById(solfege[0] + '-audio');
-        var soundTwo = document.getElementById(solfege[1] + '-audio');
-        var soundThree = document.getElementById(solfege[2] + '-audio')
-
-        sound.play();
-
-        sound.addEventListener('ended', function (e) {
-            soundTwo.play();
-        })
-
-        soundTwo.addEventListener('ended', function (e) {
-            soundThree.play();
-        })
+    testAudio.addEventListener('click', function (e) {        
     });
     
     //start button - eventually have different level options
     startBtn.addEventListener('click', function (e) {
+        currentEl.textContent = current;
         randomNotes();
-        
-        // current = 'Player One';
-        // currentEl.textContent = current;
-        //play first random notes array to start game
-        //display first player
-        console.log(solfege)
+        setTimeout(playAudio, 1000);
     })
     
     //playing the game
     clickbox.addEventListener('click', function(e) {
+        click.play();
         if (e.target.id !== 'clickbox') {
             playerInput.push(e.target.id);
             var playerNotes = playerInput.join('');
@@ -81,6 +75,34 @@ function randomNotes () {
     }
     playerInput = [];
 };
+
+function playAudio() {
+    var i = 0;
+
+    function play() {
+        if (solfege[i] === 'mi') {
+            miAudio.pause();
+            miAudio.currentTime = 0;
+            miAudio.play();
+            i++;
+        } else if (solfege[i] === 'so') {
+            soAudio.pause();
+            soAudio.currentTime = 0;
+            soAudio.play();
+            i++;
+        } else if (solfege[i] === 'la') {
+            laAudio.pause();
+            laAudio.currentTime = 0;
+            laAudio.play();
+            i++;
+        } else {
+            clearInterval(handle);
+        }
+    };
+    
+    //any faster interval it skips repeats (or something) three in a row gets first and last played :/
+    var handle = setInterval(play, 1500); 
+}
 
 //game over
 //display who the winner is!
@@ -126,13 +148,15 @@ function checkMatch (notes) {
     var answer = solfege.join('');
     if (notes.length === 6) {
         if (notes === answer){
-            //happy ding sound!
+            ding.play();
             updateScores();
         } else {
-            //'incorrect' sound! a beep or honk or something
-            console.log('not a match');
+            buzzer.play();
         }
-        setTimeout(changePlayer, 2000);
+        setTimeout(changePlayer, 1800);
         solfege = [];
+        playerInput = [];
+        randomNotes();
+        setTimeout(playAudio, 2300);
     }
 };
