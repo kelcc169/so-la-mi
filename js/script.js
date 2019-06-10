@@ -2,6 +2,7 @@
 var solfegeBank = ['mi', 'so', 'la'];
 var playerInput = [];
 var solfege = [];
+
 var oneScore = 0;
 var twoScore = 0;
 var current = 'Player One';
@@ -12,10 +13,10 @@ var twoScoreBox;
 var clickbox;
 var startBtn;
 
-    //reset button
-    //sounds to play
-    
-    //Event Listeners
+//reset button
+//sounds to play
+
+//Event Listeners
 document.addEventListener('DOMContentLoaded', function (e) {
     clickbox = document.getElementById('clickbox');
     oneScoreBox = document.getElementById('player1');
@@ -26,13 +27,29 @@ document.addEventListener('DOMContentLoaded', function (e) {
     var testAudio = document.getElementById('audio');
 
     testAudio.addEventListener('click', function (e) {
+        var sound = document.getElementById(solfege[0] + '-audio');
+        var soundTwo = document.getElementById(solfege[1] + '-audio');
+        var soundThree = document.getElementById(solfege[2] + '-audio')
 
+        sound.play();
+
+        sound.addEventListener('ended', function (e) {
+            soundTwo.play();
+        })
+
+        soundTwo.addEventListener('ended', function (e) {
+            soundThree.play();
+        })
     });
     
     //start button - eventually have different level options
     startBtn.addEventListener('click', function (e) {
         randomNotes();
+        
+        // current = 'Player One';
+        // currentEl.textContent = current;
         //play first random notes array to start game
+        //display first player
         console.log(solfege)
     })
     
@@ -43,12 +60,11 @@ document.addEventListener('DOMContentLoaded', function (e) {
             var playerNotes = playerInput.join('');
 
             checkMatch(playerNotes);
-            changePlayer();
         }
     });
-
+    
     //reset click
-
+    
 });
 //hover to play notes, if time?
 
@@ -63,18 +79,19 @@ function randomNotes () {
         solfege.push(item);
         i++;
     }
-
+    playerInput = [];
 };
 
 //game over
-    //display who the winner is!
-    //disable clickbox
+//display who the winner is!
+//disable clickbox
 
 //reset game
 // function reset
     //set current = player one
     //reset scores to 0
     //empty out arrays
+//}
 
 //start game
 // function startGame (e) {
@@ -109,11 +126,13 @@ function checkMatch (notes) {
     var answer = solfege.join('');
     if (notes.length === 6) {
         if (notes === answer){
+            //happy ding sound!
             updateScores();
         } else {
+            //'incorrect' sound! a beep or honk or something
             console.log('not a match');
         }
-        playerInput = [];
+        setTimeout(changePlayer, 2000);
         solfege = [];
     }
 };
