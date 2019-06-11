@@ -42,6 +42,7 @@ document.addEventListener('DOMContentLoaded', function (e) {
     
     //start button - eventually have different level options
     startBtn.addEventListener('click', function (e) {
+        click.play();
         reset();
         randomNotes();
         playAudio();
