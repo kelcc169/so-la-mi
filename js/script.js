@@ -3,6 +3,7 @@ const MAX_TURNS = 4;
 var turns = 0;
 var crazyButtons = false;
 var gamePlay = false;
+var solami = false;
 
 var solfegeBank = ['do', 're', 'mi', 'so', 'la'];
 var playerInput = [];
@@ -21,8 +22,6 @@ var instrBtn;
 var gotitBtn;
 var buzzer;
 var ding;
-
-//reset button
 
 //Event Listeners
 document.addEventListener('DOMContentLoaded', function (e) {
@@ -55,23 +54,24 @@ document.addEventListener('DOMContentLoaded', function (e) {
     startBtn.addEventListener('click', function (e) {
         if (!gamePlay){
             clickAudio.play();
-            reset();
+            resetGame();
             randomNotes();
             playAudio();
             gamePlay = true;
             startBtn.textContent = 'Playing';
             crazyButtons = true;
-        }
+        };
     });
     
     //playing the game
     clickbox.addEventListener('click', function(e) {
         if (e.target.id !== 'clickbox' && !crazyButtons && gamePlay) {
             clickAudio.play();
+            checkSolami();
             playerInput.push(e.target.id);
             checkMatch(playerInput.join(''));
-        }
-    });  
+        };
+    });
     
 });
 
@@ -79,16 +79,22 @@ document.addEventListener('DOMContentLoaded', function (e) {
 
 //randomizer for selection of notes
 function randomNotes () {
-    let i = 0;
-    while (i < 3) {
-        var item = solfegeBank[Math.floor(Math.random()*solfegeBank.length)];
-        solfege.push(item);
-        i++;
+    if (Math.floor((Math.random() * 10) + 1) > 5) {
+        let i = 0;
+        while (i < 3) {
+            var item = solfegeBank[Math.floor(Math.random()*solfegeBank.length)];
+            solfege.push(item);
+            i++;
+        }
+        playerInput = [];
+    } else {
+        solfege = ['so', 'la', 'mi'];
+        playerInput = [];
+        solami = true;
     }
-    playerInput = [];
 };
 
-//test play audio
+//play selected notes
 function playAudio () {
     var i = 0;
 
@@ -109,9 +115,10 @@ function playAudio () {
 
     var handle = setInterval(playTest, 900); 
 
+    if (solami){
+        setTimeout(changePlayer, 5000);
+    }
 }
-
-//play selected notes
 
 //check if game is over
 function gameOver () {
@@ -119,8 +126,9 @@ function gameOver () {
         return true;
     };
     return false;
-};
+}
 
+//display winner and disable clicks and enable replay
 function endGame () {
     if (oneScore > twoScore) {
         currentEl.textContent = "Player 1 Wins!";
@@ -132,8 +140,9 @@ function endGame () {
     gamePlay = false;
     startBtn.textContent = "Play Again";
 }
+
 //reset game
-function reset () {
+function resetGame () {
     current = 'Player 1';
     currentEl.textContent = current;
     oneScore = 0;
@@ -143,6 +152,7 @@ function reset () {
     playerInput = [];
     solfege = [];
     turns = 0;
+    solami = false;
 }
 
 //level select
@@ -168,21 +178,28 @@ function levelSelect () {
     for (note of solfegeBank) {
         document.getElementById(note).classList.remove('hidden')
     }
-}
+};
 
 //update scores and displays
 function updateScores () {
     if (current === 'Player 1') {
-        oneScore++;
+        if (solami ? oneScore-- : oneScore++);
         oneScoreBox.textContent = oneScore;
     } else {
-        twoScore++;
+        if (solami ? twoScore-- : twoScore++);
         twoScoreBox.textContent = twoScore;
     }
 };
 
-//change active player
+//change active player and continue play
 function changePlayer () {
+    if (solami) {
+        ding.play();
+        turns++;
+        solami = false;
+        updateScores();
+    }
+
     if (current === 'Player 1') {
         current = 'Player 2';
         currentEl.textContent = current;
@@ -190,32 +207,53 @@ function changePlayer () {
         current = 'Player 1';
         currentEl.textContent = current;
     }
-    setTimeout(playAudio, 500);
+
+    if ( !gameOver() ) {
+        solfege = [];
+        playerInput = [];
+        solami = false;
+        randomNotes();
+        setTimeout(playAudio, 500);
+    } else {
+        endGame();
+    }
 };
 
 //check for a match and change scores
 function checkMatch (notes) {
     var answer = solfege.join('');
+
     if (notes.length === 6) {
         crazyButtons = true;
-        if (notes === answer){
-            ding.play();
-            updateScores();
-        } else {
-            buzzer.play();
-        }
+            if (notes === answer){
+                ding.play();
+                updateScores();
+            } else {
+                buzzer.play();
+            }
         turns++;
+        
         if ( !gameOver() ) {
             solfege = [];
             playerInput = [];
-            randomNotes();
             setTimeout(changePlayer, 1200);
         } else {
             endGame();
-        }
-        // enableButtons
-    }
+        };
+    };
 };
 
+//if you click anything on solami
+function checkSolami () {
+    if (!solami) {
+        return
+    } else {
+        buzzer.play();
+        turns++;
+        updateScores();
+        solami = false;
+        changePlayer();
+    };
+};
 //add levels of difficulty
 //add music for win yaaaay
