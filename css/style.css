@@ -12,7 +12,7 @@ body {
 
 header {
     background-color: lightseagreen;
-    height: 100px;
+    height: 125px;
     margin-top: 30px;
 }
 
@@ -21,8 +21,11 @@ main {
     height: 100%;
 }
 
+h1 {
+    margin: 15px;
+}
+
 img {
-    /* margin: 50px 20px; */
     height: 100px;
     width: 200px;
     border-radius: 25px;
@@ -30,7 +33,13 @@ img {
 
 p {
     font-size: 2em;
-    margin: 25px;
+    margin: 20px;
+}
+
+button {
+    height: 30px;
+    width: 100px;
+    font-weight: bold;
 }
 
 .hidden {
@@ -55,5 +64,5 @@ img:hover {
     height: 90px;
     width: 190px;
     border: 5px solid aqua;
-    box-shadow: 5px 10px
+    box-shadow: 5px 10px;
 }
