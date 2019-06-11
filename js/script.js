@@ -1,7 +1,8 @@
 //Variables
-const MAX_TURNS = 6;
+const MAX_TURNS = 4;
 var turns = 0;
-var gameOver = false;
+var crazyButtons = false;
+var gamePlay = false;
 
 var solfegeBank = ['do', 're', 'mi', 'so', 'la'];
 var playerInput = [];
@@ -9,16 +10,15 @@ var solfege = [];
 
 var oneScore = 0;
 var twoScore = 0;
-var current = 'Player One';
+var current = 'Player 1';
 
 //DOM Associations
 var oneScoreBox;
 var twoScoreBox;
 var clickbox;
 var startBtn;
-var miAudio;
-var soAudio;
-var laAudio;
+var instrBtn;
+var gotitBtn;
 var buzzer;
 var ding;
 
@@ -31,40 +31,49 @@ document.addEventListener('DOMContentLoaded', function (e) {
     twoScoreBox = document.getElementById('player2');
     startBtn = document.getElementById('start');
     currentEl = document.getElementById('currentPl');
-    doAudio = document.getElementById('do-audio');
-    reAudio = document.getElementById('re-audio');
-    miAudio = document.getElementById('mi-audio');
-    soAudio = document.getElementById('so-audio');
-    laAudio = document.getElementById('la-audio');
     buzzer = document.getElementById('buzzer');
     ding = document.getElementById('ding');
-    click = document.getElementById('click');
+    clickAudio = document.getElementById('click');
+    instrBtn = document.getElementById('instr button');
+    gotitBtn = document.getElementById('gotit');
+
+    //instruction button
+    instrBtn.addEventListener('click', function (e) {
+        clickAudio.play();
+        document.getElementById('instructions').classList.remove('hidden');
+    });
     
+    //got it!
+    gotitBtn.addEventListener('click', function (e) {
+        clickAudio.play();
+        document.getElementById('instructions').classList.add('hidden');
+    });
+
+    //level select 
+
     //start button - eventually have different level options
     startBtn.addEventListener('click', function (e) {
-        click.play();
-        reset();
-        randomNotes();
-        playAudio();
-        startBtn.disabled = true;
-    })
-    
-    //playing the game
-    clickbox.addEventListener('click', function(e) {
-        if (e.target.id !== 'clickbox') {
-            click.play();
-            playerInput.push(e.target.id);
-            var playerNotes = playerInput.join('');
-
-            checkMatch(playerNotes);
+        if (!gamePlay){
+            clickAudio.play();
+            reset();
+            randomNotes();
+            playAudio();
+            gamePlay = true;
+            startBtn.textContent = 'Playing';
+            crazyButtons = true;
         }
     });
     
-    //reset click
+    //playing the game
+    clickbox.addEventListener('click', function(e) {
+        if (e.target.id !== 'clickbox' && !crazyButtons && gamePlay) {
+            clickAudio.play();
+            playerInput.push(e.target.id);
+            checkMatch(playerInput.join(''));
+        }
+    });  
     
 });
-//hover to play notes, if time?
-
 
 //Functions
 
@@ -79,72 +88,53 @@ function randomNotes () {
     playerInput = [];
 };
 
-//play selected notes
-function playAudio() {
+//test play audio
+function playAudio () {
     var i = 0;
 
-    function play() {
-        if (solfege[i] === 'mi') {
-            miAudio.pause();
-            miAudio.currentTime = 0;
-            miAudio.playbackRate = 1.5;
-            miAudio.play();
-            i++;
-        } else if (solfege[i] === 'do') {
-            doAudio.pause();
-            doAudio.currentTime = 0;            
-            doAudio.playbackRate = 1.5;
-            doAudio.play();
-            i++;
-        } else if (solfege[i] === 're') {
-            reAudio.pause();
-            reAudio.currentTime = 0;            
-            reAudio.playbackRate = 1.5;
-            reAudio.play();
-            i++;
-        } else if (solfege[i] === 'so') {
-            soAudio.pause();
-            soAudio.currentTime = 0;            
-            soAudio.playbackRate = 1.5;
-            soAudio.play();
-            i++;
-        } else if (solfege[i] === 'la') {
-            laAudio.pause();
-            laAudio.currentTime = 0;
-            laAudio.playbackRate = 1.5;
-            laAudio.play();
+    function playTest() {
+        if (i < 3) {
+            var note = document.getElementById(solfege[i] + '-audio');
+            note.pause();
+            note.currentTime = 0;
+            note.playbackRate = 1.5;
+            note.play();
             i++;
         } else {
             clearInterval(handle);
-        }
+            crazyButtons = false;
+            currentEl.textContent = current + " - Go!"
+        };
     };
-    
-    //any faster interval it skips repeats (or something) three in a row gets first and last played :/
-    var handle = setInterval(play, 900); 
+
+    var handle = setInterval(playTest, 900); 
+
 }
 
+//play selected notes
+
 //check if game is over
-function checkGame () {
+function gameOver () {
     if (turns === MAX_TURNS) {
-        gameOver = true;
+        return true;
     };
+    return false;
 };
 
 function endGame () {
     if (oneScore > twoScore) {
-        currentEl.textContent = "Player One Wins!";
+        currentEl.textContent = "Player 1 Wins!";
     } else if (twoScore > oneScore) {
-        currentEl.textContent = "Player Two Wins!";
+        currentEl.textContent = "Player 2 Wins!";
     } else {
         currentEl.textContent = "You tied!";
     }
-    startBtn.disabled = false;
+    gamePlay = false;
     startBtn.textContent = "Play Again";
-
 }
 //reset game
 function reset () {
-    current = 'Player One';
+    current = 'Player 1';
     currentEl.textContent = current;
     oneScore = 0;
     oneScoreBox.textContent = '0';
@@ -153,12 +143,36 @@ function reset () {
     playerInput = [];
     solfege = [];
     turns = 0;
-    gameOver = false;
+}
+
+//level select
+function levelSelect () {
+    switch (level) {
+        case 4:
+            solfegeBank = ['do', 're', 'mi', 'fa', 'so', 'la', 'ti', 'Do'];
+            break;
+        case 3:
+            solfegeBank = ['do', 're', 'mi', 'fa', 'so', 'la', 'Do'];
+            break;
+        case 2:
+            solfegeBank = ['do', 're', 'mi', 'so', 'la'];
+            break;
+        case 1:
+            solfegeBank = ['mi', 'so', 'la'];
+            break;
+        default:
+            solfegeBank = ['mi', 'so', 'la'];
+            break;
+    }
+
+    for (note of solfegeBank) {
+        document.getElementById(note).classList.remove('hidden')
+    }
 }
 
 //update scores and displays
 function updateScores () {
-    if (current === 'Player One') {
+    if (current === 'Player 1') {
         oneScore++;
         oneScoreBox.textContent = oneScore;
     } else {
@@ -169,11 +183,11 @@ function updateScores () {
 
 //change active player
 function changePlayer () {
-    if (current === 'Player One') {
-        current = 'Player Two';
+    if (current === 'Player 1') {
+        current = 'Player 2';
         currentEl.textContent = current;
     } else {
-        current = 'Player One';
+        current = 'Player 1';
         currentEl.textContent = current;
     }
     setTimeout(playAudio, 500);
@@ -183,6 +197,7 @@ function changePlayer () {
 function checkMatch (notes) {
     var answer = solfege.join('');
     if (notes.length === 6) {
+        crazyButtons = true;
         if (notes === answer){
             ding.play();
             updateScores();
@@ -190,8 +205,7 @@ function checkMatch (notes) {
             buzzer.play();
         }
         turns++;
-        checkGame();
-        if (!gameOver) {
+        if ( !gameOver() ) {
             solfege = [];
             playerInput = [];
             randomNotes();
@@ -199,9 +213,9 @@ function checkMatch (notes) {
         } else {
             endGame();
         }
+        // enableButtons
     }
 };
 
 //add levels of difficulty
-//add a replay one time button
 //add music for win yaaaay
