@@ -92,6 +92,10 @@ p {
     border-radius: 25px;
 }
 
+#Do {
+    border:2px solid yellow;
+}
+
 img:active {
     box-shadow: 0 5px #777;
     transform: translateY(5px);
