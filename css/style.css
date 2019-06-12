@@ -59,6 +59,10 @@ p {
     padding: 5px;
 }
 
+.small {
+    height: 50px;
+    width: 100px;
+}
 .hidden {
     display: none;
 }

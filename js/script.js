@@ -1,13 +1,15 @@
 //Variables
 const MAX_TURNS = 4;
 var turns = 0;
+var levelNumber = 0;
 var crazyButtons = false;
 var gamePlay = false;
 var solami = false;
 
-var solfegeBank = ['do', 're', 'mi', 'so', 'la'];
+var solfegeBank = [];
 var playerInput = [];
 var solfege = [];
+var handleSoLaMi;
 
 var oneScore = 0;
 var twoScore = 0;
@@ -35,6 +37,7 @@ document.addEventListener('DOMContentLoaded', function (e) {
     clickAudio = document.getElementById('click');
     instrBtn = document.getElementById('instr button');
     gotitBtn = document.getElementById('gotit');
+    levelBtn = document.getElementById('levels')
 
     //instruction button
     instrBtn.addEventListener('click', function (e) {
@@ -49,15 +52,24 @@ document.addEventListener('DOMContentLoaded', function (e) {
     });
 
     //level select 
+    levelBtn.addEventListener('click', function (e) {
+        clickAudio.play();
+        if (levelNumber < 4) {
+            levelNumber++;
+        } else {
+            levelNumber = 1;
+        }
+        levelBtn.textContent = 'Level ' + levelNumber;
+    });
 
     //start button - eventually have different level options
     startBtn.addEventListener('click', function (e) {
         if (!gamePlay){
             clickAudio.play();
             resetGame();
+            levelSelect(levelBtn.textContent);
             randomNotes();
             playAudio();
-            gamePlay = true;
             startBtn.textContent = 'Playing';
             crazyButtons = true;
         };
@@ -67,8 +79,8 @@ document.addEventListener('DOMContentLoaded', function (e) {
     clickbox.addEventListener('click', function(e) {
         if (e.target.id !== 'clickbox' && !crazyButtons && gamePlay) {
             clickAudio.play();
-            checkSolami();
             playerInput.push(e.target.id);
+            checkSolami();
             checkMatch(playerInput.join(''));
         };
     });
@@ -97,7 +109,7 @@ function randomNotes () {
 //play selected notes
 function playAudio () {
     var i = 0;
-
+    
     function playTest() {
         if (i < 3) {
             var note = document.getElementById(solfege[i] + '-audio');
@@ -112,13 +124,13 @@ function playAudio () {
             currentEl.textContent = current + " - Go!"
         };
     };
-
+    
     var handle = setInterval(playTest, 900); 
-
+    
     if (solami){
-        setTimeout(changePlayer, 5000);
+        handleSoLaMi = setTimeout(changePlayer, Math.floor(Math.random() * 3000) + 4500);
     }
-}
+};
 
 //check if game is over
 function gameOver () {
@@ -126,7 +138,7 @@ function gameOver () {
         return true;
     };
     return false;
-}
+};
 
 //display winner and disable clicks and enable replay
 function endGame () {
@@ -139,7 +151,7 @@ function endGame () {
     }
     gamePlay = false;
     startBtn.textContent = "Play Again";
-}
+};
 
 //reset game
 function resetGame () {
@@ -152,32 +164,46 @@ function resetGame () {
     playerInput = [];
     solfege = [];
     turns = 0;
+    level = 0;
     solami = false;
-}
+    gamePlay = true;
+    
+    var allSolfege = ['do', 're', 'mi', 'fa', 'so', 'la', 'ti', 'Do'];
+
+    for (let note of allSolfege) {
+        document.getElementById(note).classList.add('hidden');
+        document.getElementById(note).classList.remove('small');
+    }
+};
 
 //level select
-function levelSelect () {
+function levelSelect (level) {
+    
     switch (level) {
-        case 4:
+        case 'Level 4':
             solfegeBank = ['do', 're', 'mi', 'fa', 'so', 'la', 'ti', 'Do'];
             break;
-        case 3:
+        case 'Level 3':
             solfegeBank = ['do', 're', 'mi', 'fa', 'so', 'la', 'Do'];
             break;
-        case 2:
+        case 'Level 2':
             solfegeBank = ['do', 're', 'mi', 'so', 'la'];
             break;
-        case 1:
+        case 'Level 1':
             solfegeBank = ['mi', 'so', 'la'];
             break;
         default:
             solfegeBank = ['mi', 'so', 'la'];
             break;
-    }
+    };
 
     for (note of solfegeBank) {
-        document.getElementById(note).classList.remove('hidden')
-    }
+        let noteSelection = document.getElementById(note);
+        noteSelection.classList.remove('hidden');
+        if (solfegeBank.length > 5) {
+            noteSelection.classList.add('small')
+        };
+    };
 };
 
 //update scores and displays
@@ -250,10 +276,13 @@ function checkSolami () {
     } else {
         buzzer.play();
         turns++;
+        clearTimeout(handleSoLaMi);
         updateScores();
         solami = false;
+        playerInput = [];
         changePlayer();
     };
 };
+
 //add levels of difficulty
 //add music for win yaaaay
