@@ -1,5 +1,5 @@
 //Variables
-const MAX_TURNS = 4;
+const MAX_TURNS = 10;
 var turns = 0;
 var levelNumber = 0;
 var crazyButtons = false;
@@ -87,11 +87,8 @@ document.addEventListener('DOMContentLoaded', function (e) {
             startDisco();
             randomNotes();
             playAudio();
-            startBtn.textContent = 'Stop Game';
+            startBtn.textContent = 'Playing';
             crazyButtons = true;
-        } else {
-            endGame();
-            resetGame();
         };
     });
 
