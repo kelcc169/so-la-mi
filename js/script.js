@@ -5,6 +5,7 @@ var levelNumber = 0;
 var crazyButtons = false;
 var gamePlay = false;
 var solami = false;
+var disco = false;
 
 var solfegeBank = [];
 var playerInput = [];
@@ -22,6 +23,7 @@ var clickbox;
 var startBtn;
 var instrBtn;
 var gotitBtn;
+var discoBtn;
 var buzzer;
 var ding;
 
@@ -35,16 +37,18 @@ document.addEventListener('DOMContentLoaded', function (e) {
     buzzer = document.getElementById('buzzer');
     ding = document.getElementById('ding');
     clickAudio = document.getElementById('click');
+    discoAudio = document.getElementById('ducktales');
     instrBtn = document.getElementById('instr button');
     gotitBtn = document.getElementById('gotit');
     levelBtn = document.getElementById('levels')
+    discoBtn = document.getElementById('disco button');
 
     //instruction button
     instrBtn.addEventListener('click', function (e) {
         clickAudio.play();
         document.getElementById('instructions').classList.remove('hidden');
     });
-    
+
     //got it!
     gotitBtn.addEventListener('click', function (e) {
         clickAudio.play();
@@ -53,28 +57,37 @@ document.addEventListener('DOMContentLoaded', function (e) {
 
     //level select 
     levelBtn.addEventListener('click', function (e) {
-        clickAudio.play();
-        if (levelNumber < 4) {
-            levelNumber++;
-        } else {
-            levelNumber = 1;
-        }
-        levelBtn.textContent = 'Level ' + levelNumber;
+        if (!gamePlay) {
+            clickAudio.play();
+            if (levelNumber < 4) {
+                levelNumber++;
+            } else {
+                levelNumber = 1;
+            }
+            levelBtn.textContent = 'Level ' + levelNumber;
+        };
+    });
+
+    //disco button
+    discoBtn.addEventListener('change', function (e) {
+        if (!disco ? disco = true: disco = false);
     });
 
     //start button - eventually have different level options
     startBtn.addEventListener('click', function (e) {
         if (!gamePlay){
             clickAudio.play();
+            gamePlay = true;
             resetGame();
             levelSelect(levelBtn.textContent);
+            startDisco();
             randomNotes();
             playAudio();
             startBtn.textContent = 'Playing';
             crazyButtons = true;
         };
     });
-    
+
     //playing the game
     clickbox.addEventListener('click', function(e) {
         if (e.target.id !== 'clickbox' && !crazyButtons && gamePlay) {
@@ -84,14 +97,13 @@ document.addEventListener('DOMContentLoaded', function (e) {
             checkMatch(playerInput.join(''));
         };
     });
-    
 });
 
 //Functions
 
 //randomizer for selection of notes
 function randomNotes () {
-    if (Math.floor((Math.random() * 10) + 1) > 5) {
+    if (Math.floor((Math.random() * 10) + 1) > 2) {
         let i = 0;
         while (i < 3) {
             var item = solfegeBank[Math.floor(Math.random()*solfegeBank.length)];
@@ -148,7 +160,8 @@ function endGame () {
         currentEl.textContent = "Player 2 Wins!";
     } else {
         currentEl.textContent = "You tied!";
-    }
+    };
+
     gamePlay = false;
     startBtn.textContent = "Play Again";
 };
@@ -166,14 +179,9 @@ function resetGame () {
     turns = 0;
     level = 0;
     solami = false;
-    gamePlay = true;
-    
-    var allSolfege = ['do', 're', 'mi', 'fa', 'so', 'la', 'ti', 'Do'];
-
-    for (let note of allSolfege) {
-        document.getElementById(note).classList.add('hidden');
-        document.getElementById(note).classList.remove('small');
-    }
+    discoAudio.pause();
+    discoAudio.currentTime = 0;
+    resetButtons();
 };
 
 //level select
@@ -214,17 +222,17 @@ function updateScores () {
     } else {
         if (solami ? twoScore-- : twoScore++);
         twoScoreBox.textContent = twoScore;
-    }
+    };
 };
 
 //change active player and continue play
 function changePlayer () {
+    turns++;
     if (solami) {
         ding.play();
-        turns++;
         solami = false;
         updateScores();
-    }
+    };
 
     if (current === 'Player 1') {
         current = 'Player 2';
@@ -232,7 +240,7 @@ function changePlayer () {
     } else {
         current = 'Player 1';
         currentEl.textContent = current;
-    }
+    };
 
     if ( !gameOver() ) {
         solfege = [];
@@ -240,9 +248,25 @@ function changePlayer () {
         solami = false;
         randomNotes();
         setTimeout(playAudio, 500);
+        if (disco) {
+            changeButtons();
+        }
     } else {
         endGame();
-    }
+    };
+};
+
+//if you click anything on solami
+function checkSolami () {
+    if (!solami) {
+        return
+    } else {
+        buzzer.play();
+        clearTimeout(handleSoLaMi);
+        updateScores();
+        solami = false;
+        changePlayer();
+    };
 };
 
 //check for a match and change scores
@@ -257,11 +281,8 @@ function checkMatch (notes) {
             } else {
                 buzzer.play();
             }
-        turns++;
-        
+
         if ( !gameOver() ) {
-            solfege = [];
-            playerInput = [];
             setTimeout(changePlayer, 1200);
         } else {
             endGame();
@@ -269,20 +290,57 @@ function checkMatch (notes) {
     };
 };
 
-//if you click anything on solami
-function checkSolami () {
-    if (!solami) {
-        return
-    } else {
-        buzzer.play();
-        turns++;
-        clearTimeout(handleSoLaMi);
-        updateScores();
-        solami = false;
-        playerInput = [];
-        changePlayer();
+//shuffle the array randomly - thanks Mike and the internet!
+function shuffleArray(array) {
+    for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
     };
 };
 
-//add levels of difficulty
-//add music for win yaaaay
+//move the buttons around
+function changeButtons () {
+    let myButtons = document.getElementById('clickbox');
+    let shuffleMe = Array.from(myButtons.children);
+    
+    for (var button of shuffleMe) {
+        clickbox.removeChild(button);
+    };
+
+    shuffleArray(shuffleMe);
+
+    for (var button of shuffleMe) {
+        clickbox.appendChild(button);
+    };
+};
+
+//reset buttons to original location
+function resetButtons () {
+    let myButtons = document.getElementById('clickbox');
+    let shuffleMe = Array.from(myButtons.children);
+    
+    for (var button of shuffleMe) {
+        clickbox.removeChild(button);
+    };
+
+    var allSolfege = ['do', 're', 'mi', 'fa', 'so', 'la', 'ti', 'Do'];
+    
+    for (let note of allSolfege) {
+        let item = document.createElement('img');
+        clickbox.appendChild(item);
+        item.setAttribute('src', 'imgs/' + note + '-hand-sign.png');
+        item.setAttribute('id', note);
+        item.classList.add('hidden');
+    };
+};
+
+//disco protocol
+function startDisco () {
+    if (!disco) {
+        return
+    } else {
+        discoAudio.volume = 0.5;
+        discoAudio.play();
+        discoAudio.loop = true;
+    }
+};

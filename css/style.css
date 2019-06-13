@@ -59,10 +59,23 @@ p {
     padding: 5px;
 }
 
+.disco {
+    display: inline-block;
+    width: 100px;
+    background-color: white;
+    font-weight: bold;
+    font-size: 1em;
+    border: 2px solid aqua;
+    border-radius: 25px;
+    margin: 20px;
+    padding: 5px;
+}
+
 .small {
     height: 50px;
     width: 100px;
 }
+
 .hidden {
     display: none;
 }
@@ -72,6 +85,56 @@ p {
     align-items: center;
     display: grid;
     grid-template: 1fr 1fr / 1fr 1fr 1fr;
+}
+
+.switch {
+    position: absolute;
+    display: inline-block;
+    width: 60px;
+    height: 34px;
+    top: 99px;
+}  
+
+.switch input { 
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    transition: .4s;
+    border-radius: 25px;
+}
+
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 26px;
+    width: 26px;
+    left: 4px;
+    bottom: 4px;
+    background-color: white;
+    transition: .4s;
+    border-radius: 25px;
+}
+
+input:checked + .slider {
+    background-color: aqua;
+}
+
+input:focus + .slider {
+    box-shadow: 0 0 1px aqua;
+}
+
+input:checked + .slider:before {
+    transform: translateX(26px);
 }
 
 #clickbox {
