@@ -113,10 +113,12 @@ function randomNotes () {
             solfege.push(item);
             i++;
         }
-        playerInput = [];
     } else {
         solfege = ['so', 'la', 'mi'];
-        playerInput = [];
+    }
+    playerInput = [];
+    
+    if (solfege.join('') === 'solami'){
         solami = true;
     }
 };
