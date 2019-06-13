@@ -11,6 +11,7 @@ var solfegeBank = [];
 var playerInput = [];
 var solfege = [];
 var handleSoLaMi;
+var handleColors;
 
 var oneScore = 0;
 var twoScore = 0;
@@ -19,29 +20,32 @@ var current = 'Player 1';
 //DOM Associations
 var oneScoreBox;
 var twoScoreBox;
+var currentEl;
 var clickbox;
 var startBtn;
 var instrBtn;
 var gotitBtn;
 var discoBtn;
+var discoAudio;
+var clickAudio;
 var buzzer;
 var ding;
 
 //Event Listeners
 document.addEventListener('DOMContentLoaded', function (e) {
-    clickbox = document.getElementById('clickbox');
     oneScoreBox = document.getElementById('player1');
     twoScoreBox = document.getElementById('player2');
-    startBtn = document.getElementById('start');
     currentEl = document.getElementById('currentPl');
-    buzzer = document.getElementById('buzzer');
-    ding = document.getElementById('ding');
-    clickAudio = document.getElementById('click');
-    discoAudio = document.getElementById('ducktales');
+    clickbox = document.getElementById('clickbox');
+    startBtn = document.getElementById('start');
     instrBtn = document.getElementById('instr button');
     gotitBtn = document.getElementById('gotit');
     levelBtn = document.getElementById('levels')
     discoBtn = document.getElementById('disco button');
+    discoAudio = document.getElementById('ducktales');
+    clickAudio = document.getElementById('click');
+    buzzer = document.getElementById('buzzer');
+    ding = document.getElementById('ding');
 
     //instruction button
     instrBtn.addEventListener('click', function (e) {
@@ -83,8 +87,11 @@ document.addEventListener('DOMContentLoaded', function (e) {
             startDisco();
             randomNotes();
             playAudio();
-            startBtn.textContent = 'Playing';
+            startBtn.textContent = 'Stop Game';
             crazyButtons = true;
+        } else {
+            endGame();
+            resetGame();
         };
     });
 
@@ -100,7 +107,6 @@ document.addEventListener('DOMContentLoaded', function (e) {
 });
 
 //Functions
-
 //randomizer for selection of notes
 function randomNotes () {
     if (Math.floor((Math.random() * 10) + 1) > 2) {
@@ -164,6 +170,7 @@ function endGame () {
 
     gamePlay = false;
     startBtn.textContent = "Play Again";
+    clearInterval(handleColors);
 };
 
 //reset game
@@ -182,6 +189,7 @@ function resetGame () {
     discoAudio.pause();
     discoAudio.currentTime = 0;
     resetButtons();
+    document.querySelector('main').style.backgroundColor = 'darkseagreen';
 };
 
 //level select
@@ -205,12 +213,13 @@ function levelSelect (level) {
             break;
     };
 
-    for (note of solfegeBank) {
-        let noteSelection = document.getElementById(note);
-        noteSelection.classList.remove('hidden');
-        if (solfegeBank.length > 5) {
-            noteSelection.classList.add('small')
-        };
+    for (let note of solfegeBank) {
+        let item = document.createElement('img');
+        clickbox.appendChild(item);
+        item.setAttribute('src', 'imgs/' + note + '-hand-sign.png');
+        item.setAttribute('id', note);
+        if (solfegeBank.length > 5)
+        item.classList.add('small');
     };
 };
 
@@ -250,6 +259,7 @@ function changePlayer () {
         setTimeout(playAudio, 500);
         if (disco) {
             changeButtons();
+            changeColors();
         }
     } else {
         endGame();
@@ -322,17 +332,21 @@ function resetButtons () {
     for (var button of shuffleMe) {
         clickbox.removeChild(button);
     };
-
-    var allSolfege = ['do', 're', 'mi', 'fa', 'so', 'la', 'ti', 'Do'];
-    
-    for (let note of allSolfege) {
-        let item = document.createElement('img');
-        clickbox.appendChild(item);
-        item.setAttribute('src', 'imgs/' + note + '-hand-sign.png');
-        item.setAttribute('id', note);
-        item.classList.add('hidden');
-    };
 };
+
+//change colors
+function changeColors () {
+    let i = 0;
+    let color = [];
+
+    while (i < 3) {
+        var number = Math.floor(Math.random() * 255) + 1;
+        color.push(number);
+        i++;
+    }
+
+    document.querySelector('main').style.backgroundColor = 'rgb(' + color[0] + ', ' + color[1] + ', ' + color[2] + ')';
+}
 
 //disco protocol
 function startDisco () {
@@ -342,5 +356,6 @@ function startDisco () {
         discoAudio.volume = 0.5;
         discoAudio.play();
         discoAudio.loop = true;
+        handleColors = setInterval(changeColors, 1500);
     }
 };
