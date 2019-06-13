@@ -196,10 +196,10 @@ function levelSelect (level) {
     
     switch (level) {
         case 'Level 4':
-            solfegeBank = ['do', 're', 'mi', 'fa', 'so', 'la', 'ti', 'Do'];
+            solfegeBank = ['do', 're', 'mi', 'fa', 'so', 'la', 'ti', 'da'];
             break;
         case 'Level 3':
-            solfegeBank = ['do', 're', 'mi', 'fa', 'so', 'la', 'Do'];
+            solfegeBank = ['do', 're', 'mi', 'fa', 'so', 'la', 'da'];
             break;
         case 'Level 2':
             solfegeBank = ['do', 're', 'mi', 'so', 'la'];
@@ -265,7 +265,7 @@ function changePlayer () {
     };
 };
 
-//if you click anything on solami
+//if you click any buttons on solami
 function checkSolami () {
     if (!solami) {
         return
