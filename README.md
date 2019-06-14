@@ -29,8 +29,4 @@ To make this a two player game, I decided to have the two players take turns rep
 
 I like tracking progress on paper:
 
-
-
-
-
-<img src="planning/journal.JPG" width="350">
+![Journal](planning/journal.JPG)
