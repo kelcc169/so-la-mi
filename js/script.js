@@ -1,5 +1,5 @@
 //Variables
-const MAX_TURNS = 10;
+const MAX_TURNS = 6;
 var turns = 0;
 var levelNumber = 0;
 var crazyButtons = false;
