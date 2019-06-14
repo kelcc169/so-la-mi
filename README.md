@@ -25,6 +25,4 @@ I wanted to base the game off of a game that I played with my students when I wa
 
 To make this a two player game, I decided to have the two players take turns repeating the pattern and tracking the correct answers. Later, I added "so-la-mi" as a pattern that will take away points if the player responds to it.
 
-![first sketch](planning/sketch.jpg "Sketches")
-
-![progress](planning/journal.jpg "Tracking Progress")
+<img src="sketch.jpg" width="350">
