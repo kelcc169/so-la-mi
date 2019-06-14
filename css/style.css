@@ -36,12 +36,6 @@ p {
     margin: 20px;
 }
 
-video {
-    width: 150px;
-    display: inline-block;
-    border: 1px solid black;
-}
-
 .title {
     display: inline-block;
     margin: 25px;

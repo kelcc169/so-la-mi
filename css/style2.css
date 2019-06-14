@@ -1,0 +1,282 @@
+html, body {
+    text-align: center;
+    margin: 0 auto;
+    font-family: 'Kalam', cursive;
+}
+
+body {
+    display: grid;
+    grid-template-rows: .9fr 2.1fr;
+}
+
+.hidden {
+    display: none;
+}
+
+.small {
+    height: 50px;
+    width: 100px;
+}
+
+/* header section - title, buttons, switch*/
+header {
+    margin: 10px 0;
+    padding-left: 20px;
+    padding-right: 20px;
+    background-color: lightseagreen;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+}
+
+.title {
+    margin: 15px;
+    padding: 20px;
+    background-color: white;
+    width: 100px;
+    font-weight: bold;
+    font-size: 1em;
+    border: 2px solid aqua;
+    border-radius: 25px;
+}
+
+.button {
+    margin: 15px;
+    padding: 5px;
+    background-color: white;
+    width: 75px;
+    font-weight: bold;
+    font-size: .75em;
+    border: 2px solid aqua;
+    border-radius: 25px;
+    box-shadow: 0 6px #999;
+}
+
+.disco {
+    display: inline-block;
+    margin: 10px;
+    padding: 5px;
+    background-color: white;
+    width: 75px;
+    font-weight: bold;
+    font-size: .75em;
+    border: 2px solid aqua;
+    border-radius: 25px;
+}
+
+/* disco switch */
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 60px;
+    height: 34px;
+    bottom: 4px;
+}
+
+.switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.wrapper-disco {
+    margin: 0 17px;
+}
+
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    transition: .4s;
+}
+
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 26px;
+    width: 26px;
+    left: 4px;
+    bottom: 4px;
+    background-color: white;
+    transition: .4s;
+}
+
+input:checked + .slider {
+    background-color: aqua;
+}
+
+input:focus + .slider {
+    box-shadow: 0 0 1px aqua;
+}
+
+input:checked + .slider:before {
+    transform: translateX(26px);
+}
+
+.slider.round {
+    border-radius: 34px;
+}
+
+.slider.round:before {
+    border-radius: 50%;
+}
+
+/* main section - instructions, player info, and solfege buttons*/
+main {
+    margin: 5px 0;
+    background-color: darkseagreen;
+    display: grid;
+    grid-template-rows: 1fr 1fr;
+}
+
+#instructions {
+    position: absolute;
+    background-color: white;
+    border: 2px solid aquamarine;
+    z-index: 1;
+    margin: 20px;
+    border-radius: 25px;
+    padding: 20px;
+}
+
+.playerinfo {
+    display: grid;
+    grid-template: 1fr 1fr / 1fr 1fr 1fr;
+    padding: 10px;
+}
+
+p {
+    font-size: 1.25em;
+}
+
+#clickbox {
+    height: 200px;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-evenly;
+    align-items: center;
+}
+
+img {
+    height: 50px;
+    width: 100px;
+    border-radius: 25px;
+    border: 3px solid aquamarine;
+    box-shadow: 0 10px #999;
+    margin: 5px;
+}
+
+#da {
+    border: 2px solid yellow;
+}
+
+/*css selectors*/
+img:active {
+    box-shadow: 0 5px #777;
+    transform: translateY(5px);
+}
+
+.button:active {
+    box-shadow: 0 3px #777;
+    transform: translateY(3px);
+}
+
+/*media queries*/
+@media screen and (min-width: 690px) {
+    .title {
+        font-size: 1.5em;
+        margin: 10px;
+    }
+
+    .button {
+        width: 100px;
+        font-size: 1em;
+        margin: 10px;
+    }
+
+    .disco {
+        width: 100px;
+        font-size: 1em;
+        margin: 5px;
+    }
+
+    p {
+        font-size: 1.5em;
+    }
+
+    img {
+        height: 60px;
+        width: 120px;
+        margin: 10px;
+    }
+}
+
+@media screen and (min-width: 800px) {
+    img {
+        margin-left: 12px;
+        margin-right: 12px;
+    }
+}
+
+@media screen and (min-width: 835px) {
+    .title {
+        font-size: 2em;
+        width: 200px;
+        margin: 10px;
+        padding: 10px;
+    }
+
+    .button {
+        margin: 15px;
+    }
+}
+
+@media screen and (min-width: 880px) {
+    img {
+        margin: 15px;
+    }
+}
+
+@media screen and (min-width: 940px) {
+    img {
+        margin-left: 16px;
+        margin-right: 16px;
+    }
+}
+
+@media screen and (min-width: 952px) {
+    img {
+        margin-left: 17px;
+        margin-right: 17px;
+    }
+}
+
+@media screen and (min-width: 964px) {
+    main {
+        grid-template-rows: .75fr 1.15fr;
+    }
+
+    .playerinfo {
+        padding: 5px;
+    }
+
+    img {
+        height: 65px;
+        width: 130px;
+    }
+}
+
+@media screen and (min-width: 1020px) {
+    img {
+        height: 75px;
+        width: 150px;
+        margin: 0 20px;
+    }
+}

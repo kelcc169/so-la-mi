@@ -236,6 +236,7 @@ function updateScores () {
 //change active player and continue play
 function changePlayer () {
     turns++;
+
     if (solami) {
         ding.play();
         solami = false;
@@ -244,11 +245,11 @@ function changePlayer () {
 
     if (current === 'Player 1') {
         current = 'Player 2';
-        currentEl.textContent = current;
     } else {
         current = 'Player 1';
-        currentEl.textContent = current;
     };
+
+    currentEl.textContent = current;
 
     if ( !gameOver() ) {
         solfege = [];
@@ -258,7 +259,6 @@ function changePlayer () {
         setTimeout(playAudio, 500);
         if (disco) {
             changeButtons();
-            changeColors();
         }
     } else {
         endGame();
@@ -299,7 +299,7 @@ function checkMatch (notes) {
     };
 };
 
-//shuffle the array randomly - thanks Mike and the internet!
+//shuffle the array randomly - thanks Mike and StackOverflow!
 function shuffleArray(array) {
     for (let i = array.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
@@ -309,8 +309,8 @@ function shuffleArray(array) {
 
 //move the buttons around
 function changeButtons () {
-    let myButtons = document.getElementById('clickbox');
-    let shuffleMe = Array.from(myButtons.children);
+    // let myButtons = document.getElementById('clickbox');
+    let shuffleMe = Array.from(clickbox.children);
     
     for (var button of shuffleMe) {
         clickbox.removeChild(button);
@@ -325,8 +325,8 @@ function changeButtons () {
 
 //reset buttons to original location
 function resetButtons () {
-    let myButtons = document.getElementById('clickbox');
-    let shuffleMe = Array.from(myButtons.children);
+    // let myButtons = document.getElementById('clickbox');
+    let shuffleMe = Array.from(clickbox.children);
     
     for (var button of shuffleMe) {
         clickbox.removeChild(button);
